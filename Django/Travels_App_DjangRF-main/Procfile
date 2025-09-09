@@ -1,1 +1,1 @@
-web: gunicorn travels.wsgi
+web: python travels/manage.py runserver 0.0.0.0:$PORT
