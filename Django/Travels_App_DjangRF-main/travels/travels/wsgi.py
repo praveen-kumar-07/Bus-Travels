@@ -1,15 +1,10 @@
-"""
-WSGI config for travels project.
-
-It exposes the WSGI callable as a module-level variable named ``application``.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/5.2/howto/deployment/wsgi/
-"""
-
 import os
+import sys
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'travels.settings')  # inner folder name
-application = get_wsgi_application()
+# Add outer 'travels' folder to Python path
+sys.path.append("/opt/render/project/src/Django/Travels_App_DjangRF-main/travels")
 
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "travels.settings")
+
+application = get_wsgi_application()
