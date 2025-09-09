@@ -3,16 +3,16 @@ from pathlib import Path
 import dj_database_url
 from dotenv import load_dotenv
 
-# Load environment variables from .env (optional for local)
+# Load environment variables from .env (for local dev)
 load_dotenv()
 
 # BASE DIR
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY
-SECRET_KEY = os.environ.get("SECRET_KEY", "fallback-secret-key")  # Use env in production
+SECRET_KEY = os.environ.get("SECRET_KEY", "fallback-secret-key")
 DEBUG = os.environ.get("DEBUG", "False") == "True"
-ALLOWED_HOSTS = ["*"]  # Update with your Render app URL if needed
+ALLOWED_HOSTS = ["*"]  # replace * with your Render domain for more security
 
 # APPLICATIONS
 INSTALLED_APPS = [
@@ -22,26 +22,27 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # your apps here
+    # your apps
+    'bookings',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # must be here
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # For static files on Render
 ]
 
-ROOT_URLCONF = 'travels.urls'  # change if your project folder name is different
+ROOT_URLCONF = 'travels.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  # If you use custom templates
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -54,12 +55,12 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'travels.wsgi.application'  # change if project name different
+WSGI_APPLICATION = 'travels.wsgi.application'
 
 # DATABASE CONFIG
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.environ.get("postgresql://my_django_db_6djm_user:YtPKURA4AlwSfgXy1hmcdtou2znAHRQd@dpg-d2lfimf5r7bs73dlb570-a/my_django_db_6djm"),
+        default=os.environ.get("DATABASE_URL", f"sqlite:///{BASE_DIR / 'db.sqlite3'}"),
         conn_max_age=600,
         ssl_require=True
     )
@@ -84,7 +85,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# MEDIA FILES (if you have uploads)
+# MEDIA FILES
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
